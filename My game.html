@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saif's X and O</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  :root {
+    --primary: #8b5cf6;
+    --secondary: #ff0099;
+    --bg-dark: #000000;
+    --bg-cell: #0a0a0a;
+    --text: #fff;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 35%),
+      radial-gradient(circle at 90% 80%, rgba(255, 0, 153, 0.05) 0%, transparent 35%);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+  }
+body {
+justify-content: center;
+display: flex;
+
+background-image: url("https://codingstella.com/wp-content/uploads/2024/01/download-6-scaled.jpeg");
+animation: gradientBG 15s ease infinite;
+overflow: hidden;
+
+}
+@keyframes gradientBG {
+0% { background-position: 0% 50%;}
+50% {background-position: 100% 50%;}
+100% { background-position: 0% 50%;}
+}
+  h1 {
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: var(--text);
+    text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    letter-spacing: 2px;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 12px;
+    padding: 20px;
+    background: rgba(10, 10, 10, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+    backdrop-filter: blur(10px);
+    animation: scaleIn 0.3s ease-out;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+  }
+
+  .cell {
+    background: var(--bg-cell);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.8rem;
+    cursor: pointer;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cell:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
+    background: #111;
+  }
+
+  .cell:active {
+    transform: translateY(0);
+  }
+
+  .cell[data-symbol="X"] {
+    color: var(--primary);
+  }
+
+  .cell[data-symbol="O"] {
+    color: var(--secondary);
+  }
+
+  #result {
+    margin-top: 25px;
+    font-size: 1.5rem;
+    color: var(--text);
+    min-height: 30px;
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 600;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 12px 30px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes symbolAppear {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Saif's Tic Tac Toe</h1>
+<div id="board">
+  <div class="cell" data-index="0"></div>
+  <div class="cell" data-index="1"></div>
+  <div class="cell" data-index="2"></div>
+  <div class="cell" data-index="3"></div>
+  <div class="cell" data-index="4"></div>
+  <div class="cell" data-index="5"></div>
+  <div class="cell" data-index="6"></div>
+  <div class="cell" data-index="7"></div>
+  <div class="cell" data-index="8"></div>
+</div>
+
+<div id="result"></div>
+<button onclick="resetGame()">Restart</button>
+<footer>
+      Support : <a href="#">jamilusaifuddeen@gmail.com</a>
+      Or Call <a href="#">08135582750</a>
+</footer>
+<script>
+  const board = Array(9).fill('');
+  const cells = document.querySelectorAll('.cell');
+  const result = document.getElementById('result');
+  let gameOver = false;
+
+  const winCombos = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function animateSymbol(cell, symbol) {
+    cell.textContent = symbol;
+    cell.dataset.symbol = symbol;
+    cell.style.animation = 'symbolAppear 0.3s ease-out forwards';
+    setTimeout(() => cell.style.animation = '', 300);
+  }
+
+  function checkWin(player) {
+    return winCombos.some(combo => combo.every(i => board[i] === player));
+  }
+
+  function showResult(text) {
+    result.style.animation = 'none';
+    result.offsetHeight; 
+    result.textContent = text;
+    result.style.animation = 'fadeIn 0.3s ease-out';
+  }
+
+  function botMove() {
+    if(gameOver) return;
+    setTimeout(() => {
+      for(let combo of winCombos){
+        let [a,b,c] = combo;
+        let values = [board[a], board[b], board[c]];
+        if(values.filter(v=>v==='O').length === 2 && values.includes('')){     
+          let move = combo[values.indexOf('')];
+          board[move] = 'O';
+          animateSymbol(cells[move], 'O');
+          if(checkWin('O')) {
+            showResult('Bot Wins!');
+            gameOver = true;
+          }
+          return;
+        }
+    }
+
+
+      for(let combo of winCombos){
+        let [a,b,c] = combo;
+        let values = [board[a], board[b], board[c]];
+        if(values.filter(v=>'X'===v).length === 2 && values.includes('')){
+          let move = combo[values.indexOf('')];
+          board[move] = 'O';
+          animateSymbol(cells[move], 'O');
+          if(checkWin('O')) {
+            showResult('Bot Wins!');
+            gameOver = true;
+          }
+          return;
+        }
+      }
+
+      let emptyCells = board.map((v,i) => v === '' ? i : null).filter(v => v !== null);
+      if(emptyCells.length === 0) return;
+      let move = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      board[move] = 'O';
+      animateSymbol(cells[move], 'O');
+
+      if(checkWin('O')) {
+        showResult('Bot Wins!');
+        gameOver = true;
+      }
+    }, 300);
+  }
+
+  function handleClick(e) {
+    if(gameOver) return;
+    const index = e.target.dataset.index;
+    if(board[index] !== '') return;
+
+    board[index] = 'X';
+    animateSymbol(e.target, 'X');
+
+    if(checkWin('X')) {
+      showResult('You Win!');
+      gameOver = true;
+      return;
+    }
+
+    botMove();
+
+    if(!board.includes('') && !gameOver) {
+      showResult('Draw!');
+      gameOver = true;
+    }
+  }
+
+  cells.forEach(cell => cell.addEventListener('click', handleClick));
+
+  function resetGame() {
+    board.fill('');
+    cells.forEach(c => {
+      c.textContent = '';
+      c.dataset.symbol = '';
+    });
+    showResult('');
+    gameOver = false;
+  }
+</script>
+
+</body>
+</html>
